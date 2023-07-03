@@ -6,6 +6,10 @@ import errorHandler, { invalidPathHandler } from "./middleware/errorHandler.js";
 import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
 
+import cors from "cors";
+import ExpressMongoSanitize from "express-mongo-sanitize";
+import helmet from "helmet";
+
 dotenv.config();
 
 const app = express();
@@ -21,9 +25,17 @@ if (process.env.NODE_ENV == "development") {
 // Connect DB
 connectDB();
 
-
 app.use(express.json());
 app.use(cookieParser());
+
+// Sanitize data
+app.use(ExpressMongoSanitize());
+
+// Set security header
+app.use(helmet());
+
+// Enable cors
+app.use(cors())
 
 // Routes
 app.use("/api/users/", userRoute);
